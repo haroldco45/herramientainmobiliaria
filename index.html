@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vibras Positivas - CRM Pro</title>
+    <title>Vibras Positivas - CRM Inmobiliario Pro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.min.js"></script>
@@ -12,8 +12,10 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .gradient-brand { background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); }
         .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.3); }
-        .kpi-card { transition: all 0.3s ease; border: 1px solid transparent; }
-        .kpi-card:hover { border-color: #6366f1; transform: translateY(-3px); }
+        .kpi-card { transition: all 0.3s ease; }
+        .kpi-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1); }
+        /* Animación para el semáforo de atención */
+        .atencion-urgente { border-left: 4px solid #f87171 !important; background-color: #fef2f2; }
     </style>
 </head>
 <body class="bg-slate-50 min-h-screen text-slate-900">
@@ -21,14 +23,20 @@
     <nav class="sticky top-0 z-50 glass border-b border-slate-200 px-6 py-4">
         <div class="container mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-3">
-                <div class="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center text-white shadow-lg">
+                <div class="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
                     <i class="fas fa-bolt text-lg"></i>
                 </div>
                 <h1 class="text-xl font-extrabold tracking-tight uppercase">Vibras <span class="text-indigo-600">Positivas</span></h1>
             </div>
             <div class="flex items-center space-x-4">
-                <input type="text" id="buscador" onkeyup="filtrarProspectos()" placeholder="Buscar cliente o propiedad..." class="hidden md:block bg-slate-100 border-none px-4 py-2 rounded-lg text-xs focus:ring-2 focus:ring-indigo-400 outline-none w-64">
-                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                <div class="relative hidden md:block">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-3 text-slate-400">
+                        <i class="fas fa-search text-xs"></i>
+                    </span>
+                    <input type="text" id="buscador" onkeyup="filtrarProspectos()" placeholder="Buscar cliente o propiedad..." 
+                        class="bg-slate-100 border-none pl-9 pr-4 py-2 rounded-xl text-xs focus:ring-2 focus:ring-indigo-400 outline-none w-64 transition-all">
+                </div>
+                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse" title="Sistema Online"></div>
             </div>
         </div>
     </nav>
@@ -36,53 +44,54 @@
     <main class="container mx-auto px-4 py-8 max-w-6xl">
         
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-            <div class="bg-white p-5 rounded-3xl shadow-sm kpi-card">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Total Leads</p>
+            <div class="bg-white p-5 rounded-[2rem] shadow-sm kpi-card border border-slate-100">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Total Leads</p>
                 <h3 id="kpi-total" class="text-2xl font-extrabold text-slate-800">0</h3>
             </div>
-            <div class="bg-white p-5 rounded-3xl shadow-sm kpi-card">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">En Visita</p>
+            <div class="bg-white p-5 rounded-[2rem] shadow-sm kpi-card border border-slate-100">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-indigo-500">En Visita</p>
                 <h3 id="kpi-visitas" class="text-2xl font-extrabold text-indigo-600">0</h3>
             </div>
-            <div class="bg-white p-5 rounded-3xl shadow-sm kpi-card border-b-4 border-b-emerald-400">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cierres Ganados</p>
+            <div class="bg-white p-5 rounded-[2rem] shadow-sm kpi-card border-b-4 border-b-emerald-400 border border-slate-100">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-emerald-500">Cierres Ganados</p>
                 <h3 id="kpi-cierres" class="text-2xl font-extrabold text-emerald-600">0</h3>
             </div>
-            <div class="bg-white p-5 rounded-3xl shadow-sm kpi-card">
-                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Tasa de Éxito</p>
+            <div class="bg-white p-5 rounded-[2rem] shadow-sm kpi-card border border-slate-100">
+                <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest text-pink-500">Efectividad</p>
                 <h3 id="kpi-tasa" class="text-2xl font-extrabold text-pink-600">0%</h3>
             </div>
         </div>
 
         <div class="grid lg:grid-cols-12 gap-8">
-            <aside class="lg:col-span-4 space-y-6">
-                <div class="bg-white p-8 rounded-[2rem] shadow-xl border border-slate-100">
-                    <h2 class="text-2xl font-extrabold mb-2">Capturar <span class="text-indigo-600">Energía</span></h2>
-                    <p class="text-slate-500 text-sm mb-6">Nuevo registro en el embudo.</p>
+            
+            <aside class="lg:col-span-4">
+                <div class="bg-white p-8 rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 sticky top-28">
+                    <h2 class="text-2xl font-extrabold mb-1">Capturar <span class="text-indigo-600">Energía</span></h2>
+                    <p class="text-slate-400 text-[11px] mb-8 font-medium">REGISTRA UN NUEVO PROSPECTO EN EL EMBUDO</p>
                     
                     <form id="prospectoForm" class="space-y-4">
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 ml-1">NOMBRE</label>
-                            <input type="text" id="nombre" required class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Ej. Ana García">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 ml-1 tracking-tighter">NOMBRE COMPLETO</label>
+                            <input type="text" id="nombre" required class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-300" placeholder="Ej. Ana García">
                         </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 ml-1">WHATSAPP (Sin +)</label>
-                            <input type="number" id="telefono" required class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="573001234567">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 ml-1 tracking-tighter">WHATSAPP (Ej: 573001234567)</label>
+                            <input type="number" id="telefono" required class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-300" placeholder="573...">
                         </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 ml-1">PROPIEDAD</label>
-                            <input type="text" id="propiedad" required class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" placeholder="Apartamento o Casa">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 ml-1 tracking-tighter">PROPIEDAD DE INTERÉS</label>
+                            <input type="text" id="propiedad" required class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all placeholder:text-slate-300" placeholder="Casa Versalles / Apt 302">
                         </div>
-                        <div>
-                            <label class="text-[10px] font-bold text-slate-400 ml-1">ETAPA</label>
-                            <select id="estado" class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 outline-none appearance-none">
+                        <div class="space-y-1">
+                            <label class="text-[10px] font-black text-slate-400 ml-1 tracking-tighter">ETAPA ACTUAL</label>
+                            <select id="estado" class="w-full bg-slate-50 p-4 rounded-2xl ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none cursor-pointer">
                                 <option value="Contacto Inicial">📩 Contacto Inicial</option>
                                 <option value="Visita Programada">🏠 Visita Programada</option>
                                 <option value="Oferta Enviada">💰 Oferta Enviada</option>
                                 <option value="Cierre de Negocio">✨ Cierre Ganado</option>
                             </select>
                         </div>
-                        <button type="submit" class="w-full gradient-brand text-white font-bold py-4 rounded-2xl shadow-lg hover:brightness-110 active:scale-95 transition-all">
+                        <button type="submit" class="w-full gradient-brand text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-100 hover:brightness-110 active:scale-95 transition-all mt-4 tracking-tight">
                             CREAR PROSPECTO
                         </button>
                     </form>
@@ -90,29 +99,36 @@
             </aside>
 
             <section class="lg:col-span-8">
-                <div class="bg-white rounded-[2rem] shadow-xl border border-slate-100 overflow-hidden">
+                <div class="bg-white rounded-[2.5rem] shadow-xl shadow-slate-200/50 border border-slate-100 overflow-hidden">
                     <div class="p-6 border-b border-slate-50 flex justify-between items-center bg-slate-50/30">
-                        <h3 class="text-lg font-bold">Gestión de Leads</h3>
+                        <h3 class="font-bold text-slate-800">Gestión de Leads <span class="text-xs font-normal text-slate-400 ml-2 italic">Actualización automática</span></h3>
                         <div class="flex space-x-2">
-                            <button onclick="exportarExcel()" class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[10px] font-black hover:bg-emerald-100 transition">EXPORTAR</button>
-                            <button onclick="limpiarTodo()" class="bg-slate-100 text-slate-400 px-3 py-2 rounded-xl text-[10px] font-black hover:text-red-500 transition">REINICIAR</button>
+                            <button onclick="exportarExcel()" class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-[10px] font-black hover:bg-emerald-100 transition tracking-widest uppercase">Exportar</button>
+                            <button onclick="limpiarTodo()" class="bg-slate-100 text-slate-400 px-4 py-2 rounded-xl text-[10px] font-black hover:text-red-500 transition tracking-widest uppercase">Reiniciar</button>
                         </div>
                     </div>
 
                     <div class="overflow-x-auto">
                         <table class="w-full text-left">
-                            <thead class="bg-slate-50/50">
-                                <tr class="text-[10px] text-slate-400 uppercase tracking-widest">
-                                    <th class="px-8 py-4">Cliente</th>
-                                    <th class="px-8 py-4">Interés</th>
-                                    <th class="px-8 py-4 text-center">Estado</th>
-                                    <th class="px-8 py-4"></th>
+                            <thead>
+                                <tr class="text-[10px] text-slate-300 uppercase tracking-[0.2em] border-b border-slate-50">
+                                    <th class="px-8 py-5">Cliente</th>
+                                    <th class="px-8 py-5">Interés</th>
+                                    <th class="px-8 py-5 text-center">Estado</th>
+                                    <th class="px-8 py-5">Acciones</th>
                                 </tr>
                             </thead>
-                            <tbody id="listaProspectos" class="divide-y divide-slate-100 text-sm"></tbody>
+                            <tbody id="listaProspectos" class="divide-y divide-slate-50 text-sm">
+                                </tbody>
                         </table>
                     </div>
-                    <div id="vacio" class="hidden py-16 text-center text-slate-300"><i class="fas fa-seedling text-4xl mb-2"></i><p>Sin prospectos hoy.</p></div>
+                    
+                    <div id="vacio" class="hidden py-24 text-center">
+                        <div class="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4 text-slate-200">
+                            <i class="fas fa-leaf text-2xl"></i>
+                        </div>
+                        <p class="text-slate-400 font-medium italic">Tu agenda está lista para recibir buena energía.</p>
+                    </div>
                 </div>
             </section>
         </div>
@@ -133,11 +149,14 @@
                 telefono: document.getElementById('telefono').value,
                 propiedad: document.getElementById('propiedad').value,
                 estado: document.getElementById('estado').value,
-                fecha: new Date().toLocaleDateString('es-CO')
+                fecha: new Date().toLocaleDateString('es-CO'),
+                timestamp: new Date().getTime() // Para el semáforo de seguimiento
             };
+
             let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
             data.push(nuevo);
             localStorage.setItem('vp_leads', JSON.stringify(data));
+            
             form.reset();
             cargarDatos();
         });
@@ -151,31 +170,51 @@
                 emptyState.classList.remove('hidden');
                 return;
             }
+            
             emptyState.classList.add('hidden');
-            data.reverse().forEach(p => {
-                const badge = p.estado === 'Cierre de Negocio' ? 'bg-emerald-100 text-emerald-600' : 'bg-indigo-50 text-indigo-600';
-                // Link de WhatsApp dinámico
-                const wsLink = `https://wa.me/${p.telefono}?text=Hola%20${encodeURIComponent(p.nombre)},%20te%20saludo%20de%20Vibras%20Positivas.%20¿Cómo%20vas%20con%20el%20interés%20en%20${encodeURIComponent(p.propiedad)}?`;
+            const ahora = new Date().getTime();
+
+            // Ordenar por más reciente
+            data.sort((a, b) => b.id - a.id).forEach(p => {
+                const badgeStyle = p.estado === 'Cierre de Negocio' ? 'bg-emerald-100 text-emerald-600' : 
+                                  p.estado === 'Oferta Enviada' ? 'bg-amber-100 text-amber-600' : 'bg-indigo-50 text-indigo-600';
                 
+                // SEMÁFORO: Si tiene más de 2 días (172800000 ms) sin moverlo, alerta roja
+                const esAntiguo = (ahora - p.timestamp) > 172800000 && p.estado !== 'Cierre de Negocio';
+                const filaClase = esAntiguo ? 'atencion-urgente' : '';
+
+                // AUTOMATIZACIÓN WHATSAPP SEGÚN ESTADO
+                let msg = "";
+                if(p.estado === "Contacto Inicial") msg = `¡Hola ${p.nombre}! Qué buena energía. Gracias por preguntar por ${p.propiedad}. ¿Te gustaría agendar una visita?`;
+                else if(p.estado === "Visita Programada") msg = `Hola ${p.nombre}, confirmo nuestra cita para mostrarte ${p.propiedad}. ¡Nos vemos pronto!`;
+                else if(p.estado === "Oferta Enviada") msg = `Hola ${p.nombre}, ¿pudiste revisar la oferta para ${p.propiedad}? Quedo atento a tus dudas.`;
+                else msg = `¡Hola ${p.nombre}! Ha sido un placer cerrar el negocio de ${p.propiedad}. ¡Muchos éxitos!`;
+
+                const wsLink = `https://wa.me/${p.telefono}?text=${encodeURIComponent(msg)}`;
+
                 lista.innerHTML += `
-                    <tr class="hover:bg-slate-50/80 transition-all group">
-                        <td class="px-8 py-5">
+                    <tr class="hover:bg-slate-50/80 transition-all group ${filaClase}">
+                        <td class="px-8 py-6">
                             <div class="font-bold text-slate-800">${p.nombre}</div>
-                            <div class="text-[10px] text-slate-400">${p.fecha}</div>
+                            <div class="text-[10px] text-slate-400 font-medium uppercase tracking-tighter">${p.fecha}</div>
                         </td>
-                        <td class="px-8 py-5 text-slate-500 italic">
-                            <i class="fas fa-tag mr-2 text-indigo-300"></i>${p.propiedad}
+                        <td class="px-8 py-6 text-slate-500 italic font-medium">
+                            <i class="fas fa-home mr-2 text-indigo-200"></i>${p.propiedad}
                         </td>
-                        <td class="px-8 py-5 text-center">
-                            <span class="px-3 py-1 rounded-full text-[9px] font-black uppercase tracking-tighter ${badge}">${p.estado}</span>
+                        <td class="px-8 py-6 text-center">
+                            <span class="px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest ${badgeStyle}">
+                                ${p.estado}
+                            </span>
                         </td>
-                        <td class="px-8 py-5 text-right space-x-3">
-                            <a href="${wsLink}" target="_blank" class="text-emerald-500 hover:text-emerald-600 text-lg transition-transform hover:scale-125 inline-block">
-                                <i class="fab fa-whatsapp"></i>
-                            </a>
-                            <button onclick="borrar(${p.id})" class="text-slate-200 hover:text-red-500 transition-colors">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
+                        <td class="px-8 py-6 text-right">
+                            <div class="flex items-center justify-end space-x-4">
+                                <a href="${wsLink}" target="_blank" title="Enviar Mensaje Inteligente" class="w-8 h-8 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center hover:bg-emerald-500 hover:text-white transition-all transform hover:scale-110">
+                                    <i class="fab fa-whatsapp"></i>
+                                </a>
+                                <button onclick="borrar(${p.id})" class="text-slate-200 hover:text-red-500 transition-colors">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                 `;
@@ -197,21 +236,23 @@
         function filtrarProspectos() {
             const busqueda = document.getElementById('buscador').value.toLowerCase();
             const filas = lista.getElementsByTagName('tr');
-            for (let i = 0; i < filas.length; i++) {
-                const texto = filas[i].textContent.toLowerCase();
-                filas[i].style.display = texto.includes(busqueda) ? '' : 'none';
-            }
+            Array.from(filas).forEach(fila => {
+                const contenido = fila.textContent.toLowerCase();
+                fila.style.display = contenido.includes(busqueda) ? '' : 'none';
+            });
         }
 
         function borrar(id) {
-            let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
-            data = data.filter(p => p.id !== id);
-            localStorage.setItem('vp_leads', JSON.stringify(data));
-            cargarDatos();
+            if(confirm('¿Eliminar este prospecto?')) {
+                let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
+                data = data.filter(p => p.id !== id);
+                localStorage.setItem('vp_leads', JSON.stringify(data));
+                cargarDatos();
+            }
         }
 
         function limpiarTodo() {
-            if(confirm('¿Reiniciar toda la agenda?')) {
+            if(confirm('¿Reiniciar toda la base de datos de Vibras Positivas?')) {
                 localStorage.removeItem('vp_leads');
                 cargarDatos();
             }
@@ -219,11 +260,11 @@
 
         function exportarExcel() {
             let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
-            if(data.length === 0) return alert("Nada que exportar.");
+            if(data.length === 0) return alert("No hay datos para exportar.");
             const ws = XLSX.utils.json_to_sheet(data);
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Leads_VP");
-            XLSX.writeFile(wb, `Vibras_Positivas_CRM.xlsx`);
+            XLSX.writeFile(wb, `Vibras_Positivas_CRM_${new Date().toLocaleDateString()}.xlsx`);
         }
     </script>
 </body>
