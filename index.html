@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vibras Positivas - Gestión Inmobiliaria</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .gradient-brand { background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%); }
+        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.3); }
+        .prospecto-card:hover { transform: scale(1.01); transition: all 0.2s ease; }
+    </style>
+</head>
+<body class="bg-slate-50 min-h-screen text-slate-900">
+
+    <nav class="sticky top-0 z-50 glass border-b border-slate-200 px-6 py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <div class="w-10 h-10 gradient-brand rounded-xl flex items-center justify-center text-white shadow-lg shadow-indigo-200">
+                    <i class="fas fa-bolt text-lg"></i>
+                </div>
+                <h1 class="text-xl font-extrabold tracking-tight uppercase">Vibras <span class="text-indigo-600">Positivas</span></h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <span class="hidden md:block text-xs font-bold text-slate-400">ESTADO: CONECTADO</span>
+                <div class="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto px-4 py-8 max-w-6xl">
+        
+        <div class="grid lg:grid-cols-12 gap-8">
+            
+            <aside class="lg:col-span-4 space-y-6">
+                <div class="bg-white p-8 rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100">
+                    <h2 class="text-2xl font-extrabold mb-2">Capturar <span class="text-indigo-600">Energía</span></h2>
+                    <p class="text-slate-500 text-sm mb-8">Registra un nuevo prospecto y comienza el flujo de cierre.</p>
+                    
+                    <form id="prospectoForm" class="space-y-5">
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-400 ml-1">NOMBRE COMPLETO</label>
+                            <input type="text" id="nombre" required 
+                                class="w-full bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" 
+                                placeholder="Juan Pérez">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-400 ml-1">PROPIEDAD DE INTERÉS</label>
+                            <input type="text" id="propiedad" required 
+                                class="w-full bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition-all" 
+                                placeholder="Casa Versalles / Apt 302">
+                        </div>
+
+                        <div class="space-y-1">
+                            <label class="text-xs font-bold text-slate-400 ml-1">ETAPA DEL EMBUDO</label>
+                            <select id="estado" class="w-full bg-slate-50 p-4 rounded-2xl border-none ring-1 ring-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none appearance-none">
+                                <option value="Contacto Inicial">📩 Contacto Inicial</option>
+                                <option value="Visita Programada">🏠 Visita Programada</option>
+                                <option value="Oferta Enviada">💰 Oferta Enviada</option>
+                                <option value="Cierre de Negocio">✨ Cierre Ganado</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full gradient-brand text-white font-bold py-4 rounded-2xl shadow-xl shadow-indigo-200 hover:brightness-110 active:scale-95 transition-all">
+                            CREAR PROSPECTO
+                        </button>
+                    </form>
+                </div>
+
+                <div class="bg-indigo-900 text-white p-6 rounded-[2rem] shadow-lg">
+                    <h4 class="font-bold mb-2">💡 Tip del día:</h4>
+                    <p class="text-indigo-200 text-xs leading-relaxed italic">"La tecnología no es un gasto, es la inversión que te diferencia de la competencia. ¡Mantén tu agenda al día!"</p>
+                </div>
+            </aside>
+
+            <section class="lg:col-span-8">
+                <div class="bg-white rounded-[2rem] shadow-xl shadow-slate-200/60 border border-slate-100 overflow-hidden">
+                    
+                    <div class="p-6 border-b border-slate-50 flex flex-wrap justify-between items-center gap-4">
+                        <h3 class="text-xl font-bold italic underline decoration-indigo-400 underline-offset-4">Mis Clientes Potenciales</h3>
+                        <div class="flex space-x-2">
+                            <button onclick="exportarExcel()" class="bg-emerald-50 text-emerald-600 px-4 py-2 rounded-xl text-xs font-extrabold hover:bg-emerald-100 transition">
+                                <i class="fas fa-file-excel mr-2"></i> EXPORTAR EXCEL
+                            </button>
+                            <button onclick="limpiarTodo()" class="bg-slate-50 text-slate-400 px-4 py-2 rounded-xl text-xs font-extrabold hover:text-red-500 transition">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left">
+                            <thead class="bg-slate-50/50">
+                                <tr class="text-[10px] text-slate-400 uppercase tracking-[0.2em]">
+                                    <th class="px-8 py-5">Nombre / Fecha</th>
+                                    <th class="px-8 py-5">Interés</th>
+                                    <th class="px-8 py-5 text-center">Estado</th>
+                                    <th class="px-8 py-5"></th>
+                                </tr>
+                            </thead>
+                            <tbody id="listaProspectos" class="divide-y divide-slate-100">
+                                </tbody>
+                        </table>
+                    </div>
+
+                    <div id="vacio" class="hidden py-20 text-center">
+                        <i class="fas fa-meteor text-slate-200 text-5xl mb-4"></i>
+                        <p class="text-slate-400 font-medium tracking-tight">Tu agenda está lista para recibir buena energía.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <footer class="py-12 text-center text-slate-400 text-xs">
+        &copy; 2026 VIBRAS POSITIVAS - TECNOLOGÍA INMOBILIARIA PROFESIONAL
+    </footer>
+
+    <script>
+        const form = document.getElementById('prospectoForm');
+        const lista = document.getElementById('listaProspectos');
+        const emptyState = document.getElementById('vacio');
+
+        document.addEventListener('DOMContentLoaded', cargarDatos);
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nuevo = {
+                id: Date.now(),
+                nombre: document.getElementById('nombre').value,
+                propiedad: document.getElementById('propiedad').value,
+                estado: document.getElementById('estado').value,
+                fecha: new Date().toLocaleDateString('es-CO')
+            };
+
+            let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
+            data.push(nuevo);
+            localStorage.setItem('vp_leads', JSON.stringify(data));
+            
+            form.reset();
+            cargarDatos();
+        });
+
+        function cargarDatos() {
+            let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
+            lista.innerHTML = '';
+            
+            if(data.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                data.reverse().forEach(p => {
+                    const badgeClass = p.estado === 'Cierre de Negocio' ? 'bg-emerald-100 text-emerald-600' : 'bg-indigo-50 text-indigo-600';
+                    lista.innerHTML += `
+                        <tr class="prospecto-card group transition-colors">
+                            <td class="px-8 py-6">
+                                <div class="font-bold text-slate-800">${p.nombre}</div>
+                                <div class="text-[10px] text-slate-400">${p.fecha}</div>
+                            </td>
+                            <td class="px-8 py-6 text-sm text-slate-600 font-medium italic">
+                                <i class="fas fa-home mr-2 opacity-30"></i>${p.propiedad}
+                            </td>
+                            <td class="px-8 py-6 text-center">
+                                <span class="px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider ${badgeClass}">
+                                    ${p.estado}
+                                </span>
+                            </td>
+                            <td class="px-8 py-6 text-right">
+                                <button onclick="borrar(${p.id})" class="text-slate-200 hover:text-red-500 transition-colors">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+        }
+
+        function borrar(id) {
+            let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
+            data = data.filter(p => p.id !== id);
+            localStorage.setItem('vp_leads', JSON.stringify(data));
+            cargarDatos();
+        }
+
+        function limpiarTodo() {
+            if(confirm('¿Reiniciar agenda de hoy?')) {
+                localStorage.removeItem('vp_leads');
+                cargarDatos();
+            }
+        }
+
+        function exportarExcel() {
+            let data = JSON.parse(localStorage.getItem('vp_leads')) || [];
+            if(data.length === 0) return alert("No hay datos para exportar.");
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Prospectos");
+            XLSX.writeFile(wb, `Vibras_Positivas_Leads_${new Date().toLocaleDateString()}.xlsx`);
+        }
+    </script>
+</body>
+</html>
